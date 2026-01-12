@@ -207,4 +207,4 @@
   ```
 </details>
 
-![八大行星模擬圖](./images/Lab.png)</br>
+![八大行星模擬圖](Screenshot%202026-01-12%20111807.png)
