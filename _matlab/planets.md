@@ -1,7 +1,7 @@
 <details>
   <summary>八大行星動畫模擬</summary>
   
-  ```cpp=
+  ```cpp
   function multi_planet_animation_8planets
   % 八大行星動畫模擬 - 簡化兼容版本
   close all; clear; clc;
