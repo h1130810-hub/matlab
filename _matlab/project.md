@@ -234,3 +234,150 @@ Matlab講義第七章–握把式圖形與GUI設計、第八章–二維圖形�
 上網查詢許多可以執行的實際例子，挑選了三個可以繪製出三維圖形的程式碼，第一個是繪製三維曲面圖，利用到的公式為z = sin(x) + cos(y)，另外利用上課學到的內容xlabel\ylabel等繪製出x/y/z軸。第二個是繪製三維網格圖，與前面那張圖唯一不同的是運用到的公式為z = x .* exp(-x.^2 - y.^2)，最後，第三個圖是繪製三維等高線圖，公式是運用z = x.^2 + y.^2，如圖所示，繪製20條等高線。     
 
 - 實作
+<details>
+    <summary>三維曲面圖</summary>
+    
+```cpp
+  [x, y] = meshgrid(-3:0.1:3, -3:0.1:3);
+  z = sin(x) + cos(y);
+  figure;
+  surf(x, y, z);
+  title(‘三維曲面圖: z = sin(x) + cos(y)');
+  xlabel('X軸');
+  ylabel('Y軸');
+  zlabel('Z軸');
+  colorbar;
+  shading interp; % 平滑著色
+```
+
+</details>
+
+![三維曲面圖](三維曲面圖.png)
+
+ <details>
+    <summary>三維網格圖</summary>
+   
+```cpp
+  [x, y] = meshgrid(-2:0.2:2);
+  z = x .* exp(-x.^2 - y.^2);
+  figure;
+  mesh(x, y, z);
+  title('三維網格圖: z = x * exp(-x² - y²)');
+  xlabel('X軸');
+  ylabel('Y軸');
+  zlabel('Z軸');
+  colormap(jet);
+```
+
+</details>
+
+![三維網格圖](三維網格圖.png)
+
+ <details>
+    <summary>三維等高線圖</summary>
+   
+```cpp
+  [x, y] = meshgrid(-2:0.1:2);
+  z = x.^2 + y.^2;
+  figure;
+  contour3(x, y, z, 20); % 20條等高線
+  title('三維等高線圖: z = x² + y²');
+  xlabel('X軸');
+  ylabel('Y軸');
+  zlabel('Z軸');
+  grid on;
+```
+
+</details>
+
+![三維等高線圖](三維等高線圖.png)
+
+- 心得
+
+在一開始選定這個想要做的主題時，我還很迷茫可以做什麼樣式的三維圖形的延伸，然而出現太多的問題，以至於我最終未能找到一個像樣的延伸例子，我最後統整了許多上課所學到的內容，並且結合Deepseek的合作寫出了這三個圖形，雖然看似簡單的程式碼，短短10行不到，但是卻蘊含了許多老師在三維圖形的課程當中所教的東西，所以需要具備許多先備的知識不然無法正確執行出來這些程式碼。做完這兩個主題，我發現我跟Deepseek的配合度極好，先將一些自己所想到的指令輸入進去，然後Deepseek就會將所可能需要具備的程式碼或者是建議輸出給我，我再透過融會貫通即可完成這兩項主題，我到現在覺得最困難的點是如何第一次就輸入正確的程式碼，我必須透過一次又一次的確認以及重複檢視自己的程式碼是否正確，這是我認為在操作這些程式碼中最難以達成的。
+
+### 主題三、影像幻燈片動畫
+- 大綱
+
+  本主題透過結合第十六章節的影像與動畫，一開始同樣是使用function函數，即按下Run指令就可以執行了，
+  這次的主題是透過如模擬真實動畫片般將一幕又一幕的變化呈現在觀者面前，我認為這個對於一個新手在學習matlab中為最佳檢視這章節是否學習如預期最佳解。	
+
+- 實作
+<details>
+    <summary>影像幻燈片動畫</summary>
+    
+```cpp
+function image_slideshow_demo()
+% 影像幻燈片演示函數
+% 用法：直接呼叫即可執行
+   % 創建多個測試影像
+   images = create_test_images();
+  
+   % 播放幻燈片
+   play_slideshow(images);
+end
+function images = create_test_images()
+% 創建測試影像集
+   % 第一張影像 - 漸變色
+   img1 = zeros(200, 300, 3);
+   for i = 1:3
+       img1(:,:,i) = repmat(linspace(0,1,300), 200, 1);
+   end
+   % 第二張影像 - 圓形
+   [xx, yy] = meshgrid(1:300, 1:200);
+   img2 = zeros(200, 300, 3);
+   r = sqrt((xx-150).^2 + (yy-100).^2);
+   img2(:,:,1) = r < 50;  % 紅色圓形
+   % 第三張影像 - 條紋
+   img3 = zeros(200, 300, 3);
+   img3(:,:,2) = repmat(mod(1:300, 20) < 10, 200, 1);  % 綠色條紋
+  
+   % 第四張影像 - 漸變圓
+   img4 = zeros(200, 300, 3);
+   img4(:,:,3) = exp(-((xx-150).^2 + (yy-100).^2) / 2000);  % 藍色高斯分佈
+   images = {img1, img2, img3, img4};
+end
+function play_slideshow(images)
+% 播放影像幻燈片
+% 輸入：images - 包含影像的cell array
+   figure('Position', [100, 100, 800, 600]);
+  
+   for i = 1:length(images)
+       % 顯示當前影像
+       imshow(images{i});
+       title(['影像 ', num2str(i), '/', num2str(length(images))]);
+       pause(1);  % 暫停1秒
+      
+       % 添加淡入淡出效果（除了最後一張）
+       if i < length(images)
+           fade_transition(images{i}, images{i+1});
+       end
+   end
+  
+   % 結束訊息
+   msgbox('幻燈片播放完畢！', '完成');
+end
+function fade_transition(img_out, img_in)
+% 淡入淡出轉場效果
+% 輸入：img_out - 淡出影像
+%       img_in - 淡入影像
+   for alpha = 1:-0.1:0
+       % 淡出當前影像
+       blended_img = img_out * alpha;
+       imshow(blended_img);
+       title('淡出效果...');
+       drawnow;
+       pause(0.05);
+   end
+  
+   for alpha = 0:0.1:1
+       % 淡入下張影像
+       blended_img = img_in * alpha;
+       imshow(blended_img);
+       title('淡入效果...');
+       drawnow;
+       pause(0.05);
+   end
+end
+```
+</details>
