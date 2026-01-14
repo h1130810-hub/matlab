@@ -35,4 +35,21 @@
 
 </details>
 
-![三維曲面圖](三維網格圖.png)
+![三維網格圖](三維網格圖.png)
+
+ <details>
+    <summary>三維等高線圖</summary>
+   
+```cpp
+  [x, y] = meshgrid(-2:0.1:2);
+  z = x.^2 + y.^2;
+  figure;
+  contour3(x, y, z, 20); % 20條等高線
+  title('三維等高線圖: z = x² + y²');
+  xlabel('X軸');
+  ylabel('Y軸');
+  zlabel('Z軸');
+  grid on;
+```
+
+![三維等高線圖](三維等高線圖.png)
